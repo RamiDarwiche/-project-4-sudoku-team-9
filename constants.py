@@ -15,4 +15,4 @@ BG_COLOR = (255, 255, 255)
 LINE_COLOR = (245, 152, 66)
 NUM_COLOR = (0, 0, 0)
 
-# these are the constant
+# these are the constant numbers that are used through out the program
