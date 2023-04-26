@@ -4,7 +4,7 @@ import sudoku_generator
 from constants import *
 from sudoku_generator import Board
 
-def draw_game_easy(screen):
+def draw_game_easy(screen):  # creates the main menu that shows first
     #title font
     easy_title_font = pygame.font.Font(None, 80)
     button_font = pygame.font.Font(None, 70)
@@ -34,14 +34,19 @@ def draw_game_easy(screen):
     hard_text = button_font.render("Hard", 0 , (255,255,255))
 
     #button bg color & text
+    # this is for the easy button
     easy_surface = pygame.Surface((easy_text.get_size()[0] + 20,
                                     easy_text.get_size()[1] + 20))
     easy_surface.fill(LINE_COLOR)
     easy_surface.blit(easy_text,(10,10))
+
+    #  this is for the medium difficulty button
     medium_surface = pygame.Surface((medium_text.get_size()[0] + 20,
                                    medium_text.get_size()[1] + 20))
     medium_surface.fill(LINE_COLOR)
     medium_surface.blit(medium_text,(10,10))
+
+    #  this is for the hard difficulty button
     hard_surface = pygame.Surface((hard_text.get_size()[0] + 20,
                                    hard_text.get_size()[1] + 20))
     hard_surface.fill(LINE_COLOR)
@@ -78,8 +83,9 @@ def draw_game_easy(screen):
 
     #game over screen
 def draw_game_over(screen):
+    #  Creates the screen for the Game Over/ Win screen
     game_over_font = pygame.font.Font(None, 80)
-    mainImage = pygame.image.load("sudokumenu.jpg")
+    mainImage = pygame.image.load("sudokumenu.jpg")  # this is the background image we use
     mainImage = pygame.transform.scale(mainImage, (600, 675))
     screen.blit(mainImage, (0, 0))
     if winner == 1:
@@ -114,19 +120,21 @@ def draw_game_over(screen):
     exit_surf.fill(LINE_COLOR)
     exit_surf.blit(exit_text, (10, 10))
     screen.blit(exit_surf, exit_rect)
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        if exit_rect.collidepoint(event.pos):
+
+    if event.type == pygame.MOUSEBUTTONDOWN:  # gathers where the mouse clicks on the screen to prompt the next action
+        # only restart and exit because once the game is over, either exit or start a new game
+        if exit_rect.collidepoint(event.pos):  # if the mouse clicks in the exit button, exits the game
             pygame.quit()
             sys.exit()
-        elif restart_rect.collidepoint(event.pos):
-            draw_game_easy(screen)
+        elif restart_rect.collidepoint(event.pos):  # of the user clicks in the restart button
+            draw_game_easy(screen)  # takes the user back to the main menu
             screen.fill(WHITE)
             board = Board(WIDTH, HEIGHT, screen, difficulty)
-            board.draw()
+            board.draw()  #starts running through the function again and prompting the sudoku grid
             screen.blit(restart_surf, restart_rect)
             screen.blit(reset_surf, reset_rect)
             screen.blit(exit_surf, exit_rect)
-    pygame.display.update()
+    pygame.display.update()  # updates the display
 
 
 if __name__ == '__main__':
@@ -147,7 +155,7 @@ if __name__ == '__main__':
     board = Board(WIDTH, HEIGHT, screen, difficulty)
     board.draw()
     game_over_font = pygame.font.Font(None, 40)
-    # Restart button
+    # Restart button with the rectangle
     restart_text = game_over_font.render("Restart", 0, (BLACK))
     restart_surf = pygame.Surface((restart_text.get_size()[0] + 20,
                                    restart_text.get_size()[1] + 20))
@@ -157,7 +165,7 @@ if __name__ == '__main__':
     restart_surf.blit(restart_text, (10, 10))
     screen.blit(restart_surf, restart_rect)
 
-    # reset button
+    # reset button with the rectangle
     reset_text = game_over_font.render("Reset", 0, (BLACK))
     reset_surf = pygame.Surface((reset_text.get_size()[0] + 20,
                                  reset_text.get_size()[1] + 20))
@@ -167,7 +175,7 @@ if __name__ == '__main__':
     reset_surf.blit(reset_text, (10, 10))
     screen.blit(reset_surf, reset_rect)
 
-    # exit button
+    # exit button with the rectangle
     exit_text = game_over_font.render("Exit", 0, (BLACK))
     exit_surf = pygame.Surface((exit_text.get_size()[0] + 20,
                                 exit_text.get_size()[1] + 20))
@@ -179,6 +187,7 @@ if __name__ == '__main__':
     pygame.display.flip()
 
     num = -1
+    #  starts to run the program and go based on the users clicks
     while True:
 
         for event in pygame.event.get():
@@ -186,63 +195,49 @@ if __name__ == '__main__':
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
-                if reset_rect.collidepoint(event.pos):
-                    board.reset_to_original()
+                if reset_rect.collidepoint(event.pos):  # when the user clicks the reset button
+                    board.reset_to_original()   # resets the sudoku grid to the beginning with the pre-filled numbers
                     board.draw()
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
-                    continue
-                elif exit_rect.collidepoint(event.pos):
-                    pygame.quit()
+                    continue  # to continue playing
+                elif exit_rect.collidepoint(event.pos):  # when the user clicks the exit button
+                    pygame.quit()  # similar to the game over screen, exits the game
                     sys.exit()
-                elif restart_rect.collidepoint(event.pos):
-                    draw_game_easy(screen)
-                    screen.fill(WHITE)
+                elif restart_rect.collidepoint(event.pos):   # when the user clicks on the restart button
+                    draw_game_easy(screen)   # takes the user back to the maun menu
+                    screen.fill(WHITE)  # similar to the restart button in teh game over screen
                     difficulty = draw_game_easy(screen)
                     board = Board(WIDTH, HEIGHT, screen, difficulty)
                     board.draw()
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
-                    continue
+                    continue  # continues to run through the game
 
-            if event.type == pygame.MOUSEBUTTONDOWN and game_over:
-                if exit_rect.collidepoint(event.pos):
-                    pygame.quit()
-                    sys.exit()
-                elif restart_rect.collidepoint(event.pos):
-                    draw_game_easy(screen)
-                    screen.fill(WHITE)
-                    difficulty = draw_game_easy(screen)
-                    board = Board(WIDTH, HEIGHT, screen, difficulty)
-                    board.draw()
-                    screen.blit(restart_surf, restart_rect)
-                    screen.blit(reset_surf, reset_rect)
-                    screen.blit(exit_surf, exit_rect)
-                    continue
-
-
-            if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+            if event.type == pygame.MOUSEBUTTONDOWN and not game_over:  # this starts to gather what the user click in
+                # in the grid and is going to place the number the user wants
                 clicked_row = int(event.pos[1] / SQUARE_SIZE)
                 clicked_col = int(event.pos[0] / SQUARE_SIZE)
-                board.selected_row = clicked_row
+                board.selected_row = clicked_row  # assigns the clicked row ro the board class
                 board.selected_col = clicked_col
-                board.cells[clicked_row][clicked_col].row = clicked_row
+                board.cells[clicked_row][clicked_col].row = clicked_row  # assigns the new row and col to the cells
+                # so that it can put it in the cells parameter
                 board.cells[clicked_row][clicked_col].col = clicked_col
 
-                print(clicked_row, clicked_col)
+                # print(clicked_row, clicked_col)
 
                 # coords is supposed to take x,y of pos and print the row and col that is selected
                 #you can use these print functions to test if it works
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:  # this gathers the key that is pushed by the user
 
                 if event.key == pygame.K_1:
                     num = 1
                     print("kdhb")
                     print(board.cells[clicked_row][clicked_col].set_cell_value(num))
 
-                    board.draw()
+                    board.draw()  # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -250,7 +245,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_2:
                     num = 2
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -259,7 +254,7 @@ if __name__ == '__main__':
                     num = 3
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -268,7 +263,7 @@ if __name__ == '__main__':
                     num = 4
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()  # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -277,7 +272,7 @@ if __name__ == '__main__':
                     num = 5
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -286,7 +281,7 @@ if __name__ == '__main__':
                     num = 6
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -295,7 +290,7 @@ if __name__ == '__main__':
                     num = 7
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -304,7 +299,7 @@ if __name__ == '__main__':
                     num = 8
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
@@ -313,28 +308,29 @@ if __name__ == '__main__':
                     num = 9
 
                     board.cells[clicked_row][clicked_col].set_cell_value(num)
-                    board.draw()
+                    board.draw()   # prints the number the user inputs on the new board
                     screen.blit(restart_surf, restart_rect)
                     screen.blit(reset_surf, reset_rect)
                     screen.blit(exit_surf, exit_rect)
 
-                if event.key == pygame.K_RETURN and num <= 9:
+                if event.key == pygame.K_RETURN and num <= 9:  # with the return key press it locks the number the user
+                    # inputs in the position
                     board.place_number(num)
 
 
-                if board.is_full() == True:
-                    if board.check_board() == True:
+                if board.is_full() == True:  # everytime this checks to see if the board is full
+                    if board.check_board() == True:  # if true then it will check if the board is correct it will
+                        # update as True
                         winner = 1
                         game_over = True
-                    else:
+                    else:   # if not, it will return True but will also include that the winner is 0
                         winner = 0
                         game_over = True
                 if game_over == True:
                     pygame.display.update()
-                    pygame.time.delay(1000)
-                    print(winner)
-                    draw_game_over(screen)
+                    pygame.time.delay(1000)  # delays the screen to pop up
+                    draw_game_over(screen)   # will draw game over screen according to the winner number
                     continue
 
-            pygame.display.update()
+            pygame.display.update()  # updates the display
 
