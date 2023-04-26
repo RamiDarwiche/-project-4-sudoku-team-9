@@ -251,13 +251,6 @@ size is the number of rows/columns of the board (9 for this project)
 removed is the number of cells to clear (set to 0)
 Return: list[list] (a 2D Python list to represent the board)
 '''
-#def generate_sudoku(size, removed):
-    #sudoku = SudokuGenerator(size, removed)
-    #sudoku.fill_values()
-    #board = sudoku.get_board()
-    #sudoku.remove_cells()
-    #board = sudoku.get_board()
-    #return board
 
 class Cell:
 
@@ -416,7 +409,7 @@ class Board:
         for i in range(0, BOARD_ROWS):
             for j in range(0, BOARD_COLS):
                 self.cells[i][j].draw()
-                #self.cells[BOARD_COLS].draw()
+             
         '''
         Draws an outline of the Sudoku grid, with bold lines to delineate the 3x3 boxes.
         Draws every cell on this board.
@@ -499,14 +492,6 @@ class Board:
         return True
 
 
-    def update_board(self):
-        pass
-        '''
-        Updates the underlying 2D board with the values in all cells.
-        '''
-
-
-
     def find_empty(self):
         '''
         Finds an empty cell and returns its row and col as a tuple (x, y).
@@ -516,7 +501,7 @@ class Board:
                 if self.cells[i][j]:
                     return i, j
 
-
+	# checks for winning board
     def check_board(self):
         #checks if the board is completed properly
         num = 0
@@ -526,27 +511,28 @@ class Board:
                     return False
         return True
 
+	# used for checking if board is completed succesfully
     def iterate_nums(self):
         for BOARD_ROWS in self.cells:
             for num in BOARD_ROWS:
                 return num
 
 
-
+	# checks validity in rows
     def valid_in_row(self, row, num):
         for col in range(0, 8):
             if self.cells[row][col].value == num:
                 return False
         return True
 
-
+	# checks validity in columns
     def valid_in_col(self, col, num):
         for row in range(0, 8):
             if self.cells[row][col].value == num:
                 return False
         return True
 
-
+	# checks validity in box
     def valid_in_box(self, row_start, col_start, num):
         for row in range(0, 2):
             for col in range(0, 2):
@@ -560,11 +546,6 @@ class Board:
         return (self.valid_in_row(row, num) and self.valid_in_col(col, num) and
                 self.valid_in_box(row - row % 3, col - col % 3, num))
 
-
-
-class Main:
-    # MUST MAKE DIFFICULTY A NUMBER (30 FOR EASY, 40 FOR MED, 50 FOR HARD)
-    pass
 
 '''
 DO NOT CHANGE
