@@ -1,8 +1,8 @@
 import pygame, sys
 
-import sudoku_generator_whole
+import sudoku_generator
 from constants import *
-from sudoku_generator_whole import Board
+from sudoku_generator import Board
 
 def draw_game_easy(screen):
     #title font
