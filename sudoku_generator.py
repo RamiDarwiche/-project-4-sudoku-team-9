@@ -21,6 +21,7 @@ class SudokuGenerator:
     '''
 
     def __init__(self, row_length, removed_cells):
+        #init the backend 2d array
         self.row_length = row_length
         self.removed_cells = removed_cells
         self.board = [[0 for _ in range(row_length)] for _ in range(row_length)]
@@ -43,6 +44,7 @@ class SudokuGenerator:
     '''
 
     def print_board(self):
+        #prints the board by looping through 2d array
         for row in range(self.row_length):
             for col in range(self.row_length):
                 print(self.board[row][col], end=" ")
@@ -59,6 +61,7 @@ class SudokuGenerator:
     '''
 
     def valid_in_row(self, row, num):
+        #checks if the number only appears one time in the row
         for col in range(self.row_length):
             if self.board[row][col] == num:
                 return False
@@ -75,6 +78,7 @@ class SudokuGenerator:
     '''
 
     def valid_in_col(self, col, num):
+        #checks if the number only appears one time in the col
         for row in range(self.row_length):
             if self.board[row][col] == num:
                 return False
@@ -92,6 +96,7 @@ class SudokuGenerator:
     '''
 
     def valid_in_box(self, row_start, col_start, num):
+        #checks if the number only appears one time in the box
         for row in range(self.box_length):
             for col in range(self.box_length):
                 if self.board[row_start + row][col_start + col] == num:
@@ -108,6 +113,7 @@ class SudokuGenerator:
     '''
 
     def is_valid(self, row, col, num):
+        #checks if the number is valid in both the row and col
         return (self.valid_in_row(row, num) and self.valid_in_col(col, num) and
                 self.valid_in_box(row - row % self.box_length, col - col % self.box_length, num))
 
@@ -122,6 +128,7 @@ class SudokuGenerator:
 
     def fill_box(self, row_start, col_start):
         num = 0
+        #this fills the 3x3 box with generated numbers
         for row in range(self.box_length):
             for col in range(self.box_length):
                 while True:
@@ -139,6 +146,7 @@ class SudokuGenerator:
     '''
 
     def fill_diagonal(self):
+        #this fills the diag
         for start in range(0, self.row_length, self.box_length):
             self.fill_box(start, start)
 
@@ -155,6 +163,7 @@ class SudokuGenerator:
     '''
 
     def fill_remaining(self, row, col):
+        #given
         if col >= self.row_length and row < self.row_length - 1:
             row += 1
             col = 0
@@ -190,6 +199,7 @@ class SudokuGenerator:
     '''
 
     def fill_values(self):
+        #given
         self.fill_diagonal()
         self.fill_remaining(0, self.box_length)
 
@@ -206,6 +216,7 @@ class SudokuGenerator:
     '''
 
     def remove_cells(self):
+        #this removes the cell so sudoku can be played
         count = self.removed_cells
 
         while count != 0:
@@ -264,6 +275,7 @@ class Cell:
 
 
     def set_sketched_value(self, value):
+        #set the SKETCHED value
         pygame.init()
         pygame.display.set_caption("Sudoku")
         font = pygame.font.Font(None, 40)
@@ -279,7 +291,9 @@ class Cell:
         Otherwise, no value is displayed in the cell.
         The cell is outlined red if it is currently selected.
         '''
+        #init font for number
         num_font = pygame.font.Font(None, 25)
+        #initialize the surface for potential cells
         chip_1_surf = num_font.render('1', 0, NUM_COLOR)  # sudoku 1-9
         # 3. text drawing: define the location
         chip_2_surf = num_font.render('2', 0, NUM_COLOR)
@@ -291,6 +305,7 @@ class Cell:
         chip_8_surf = num_font.render('8', 0, NUM_COLOR)
         chip_9_surf = num_font.render('9', 0, NUM_COLOR)
 
+        #if 1-9 is typed by the user
         if self.value == 1:
             # draw 'x' or 'o' as text in the window/ board
             # 2. text drawing: define the text
@@ -367,6 +382,7 @@ class Board:
 
 
     def initialize_board(self):
+        #init the board iwth all zeros
         # 1st approach
         return [["0" for i in range(9)] for j in range(9)]
 
@@ -407,6 +423,7 @@ class Board:
         '''
 
     def select(self,row,col):
+        #selects the cell based on the row and column given from click
         row = self.selected_row
         col = self.selected_col
         box_rect = (row, col, WIDTH // 9, HEIGHT // 9)
@@ -417,6 +434,7 @@ class Board:
         '''
 
     def click(self, x, y):
+        #uses the coordinates of the mouse and the surface of the number cells to find (row, col)
         '''
         If a tuple of (x, y) coordinates is within the displayed board, this function returns a tuple of the (row, col)
         of the cell which was clicked. Otherwise, this function returns None
@@ -430,6 +448,7 @@ class Board:
 
 
     def clear(self):
+        #clears the sketched or typed in cell
         if self.original_board[self.selected_row][self.selected_col] == 0:
             self.cells[self.selected_row][self.selected_col].set_cell_value(0)
             self.cells[self.selected_row][self.selected_col].set_sketched_value(0)
@@ -439,6 +458,7 @@ class Board:
         '''
 
     def sketch(self, value):
+        #allows user to sketch a value and not lock it in
         self.cells[self.selected_row][self.selected_col].draw()
         '''draw(selected_row, )
         Sets the sketched value of the current selected cell equal to user entered value.
@@ -446,6 +466,7 @@ class Board:
         '''
 
     def place_number(self, value):
+        #confirms number
         if self.original_board[self.selected_row][self.selected_col] == 0:
             self.cells[self.selected_row][self.selected_col].set_cell_value(value)
         '''
@@ -454,10 +475,12 @@ class Board:
         '''
 
     def reset_to_original(self):
+        #resets the board to its original state
         self.board = self.original_board
           # going to go through everything in original board, and 3change from integers to cell objects
         row = []
         self.cells = []
+        #compares current board to original then removes the ones that do not match
         for i in range(0, 9):
             for j in range(0, 9):
                 row.append(Cell(self.original_board[i][j], i, j, screen))
@@ -465,6 +488,7 @@ class Board:
             row = []
 
     def is_full(self):
+        #finds if the board is full and game is over
         '''
         Returns a Boolean value indicating whether the board is full or not.
         '''
@@ -476,7 +500,6 @@ class Board:
 
 
     def update_board(self):
-        #WHAT IS THE PURPOSE OF THIS FUNCTION
         pass
         '''
         Updates the underlying 2D board with the values in all cells.
@@ -495,6 +518,7 @@ class Board:
 
 
     def check_board(self):
+        #checks if the board is completed properly
         num = 0
         for i in range(0,8):
             for j in range(0,8):
@@ -532,6 +556,7 @@ class Board:
 
 
     def is_valid(self, row, col, num):
+        #checks if the sudoku is valid
         return (self.valid_in_row(row, num) and self.valid_in_col(col, num) and
                 self.valid_in_box(row - row % 3, col - col % 3, num))
 
